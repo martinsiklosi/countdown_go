@@ -78,7 +78,24 @@ func UsefulCombs(e1, e2 Exp) []Exp {
 
 // Return permutations of expressions in v2 and v2.
 func Perms(v1, v2 []Exp, id_set map[int]bool, n_vars int) []Exp {
-	return *new([]Exp)
+	var output []Exp
+	for _, e1 := range v1 {
+		for _, e2 := range v2 {
+			if e1.con&e2.con != 0 {
+				continue
+			}
+			for _, comb := range UsefulCombs(e1, e2) {
+				exp_id := CreateID(comb, n_vars)
+				_, is_in := id_set[exp_id]
+				if is_in {
+					continue
+				}
+				output = append(output, comb)
+				id_set[exp_id] = true
+			}
+		}
+	}
+	return output
 }
 
 // Generate id of expression
