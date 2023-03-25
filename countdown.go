@@ -34,7 +34,7 @@ func Add(e1, e2 *Exp) (*Exp, error) {
 // Multiply two expressions and return result.
 func Mult(e1, e2 *Exp) (*Exp, error) {
 	if e1.val == 1 || e2.val == 1 {
-		return new(Exp), errors.New("Unnecessary multiplication.")
+		return nil, errors.New("Unnecessary multiplication.")
 	}
 	str := fmt.Sprintf("%s*%s", e1.str, e2.str)
 	val := e1.val * e2.val
@@ -45,7 +45,7 @@ func Mult(e1, e2 *Exp) (*Exp, error) {
 // Subtract two expressions and return result.
 func Sub(e1, e2 *Exp) (*Exp, error) {
 	if e1.val <= e2.val {
-		return new(Exp), errors.New("Unnecessary subtraction.")
+		return nil, errors.New("Unnecessary subtraction.")
 	}
 	str := fmt.Sprintf("(%s-%s)", e1.str, e2.str)
 	val := e1.val - e2.val
@@ -56,7 +56,7 @@ func Sub(e1, e2 *Exp) (*Exp, error) {
 // Divide two expressions and return result.
 func Div(e1, e2 *Exp) (*Exp, error) {
 	if e2.val == 1 || e1.val%e2.val != 0 {
-		return new(Exp), errors.New("Unnecessary or invalid division.")
+		return nil, errors.New("Unnecessary or invalid division.")
 	}
 	str := fmt.Sprintf("%s/(%s)", e1.str, e2.str)
 	val := e1.val / e2.val
