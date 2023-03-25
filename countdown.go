@@ -157,7 +157,7 @@ func RunNumbers(nums []int, target int) string {
 		}
 	}
 
-	// Print the best expression
+	// Return the best expression as a string
 	var exps []*Exp
 	for _, v := range exp_sets {
 		exps = append(exps, v...)
@@ -170,7 +170,6 @@ func RunNumbers(nums []int, target int) string {
 }
 
 func main() {
-	// Take input
 	fmt.Print("Enter numbers: ")
 	reader := bufio.NewReader(os.Stdin)
 	char, _, err := reader.ReadLine()
@@ -193,7 +192,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	ans := RunNumbers(nums, target)
 	fmt.Print(ans)
-
 }
