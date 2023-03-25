@@ -24,50 +24,50 @@ func NewExp(str string, val int, con int) *Exp {
 }
 
 // Add two expressions and return result.
-func Add(e1, e2 Exp) (Exp, error) {
+func Add(e1, e2 *Exp) (*Exp, error) {
 	str := fmt.Sprintf("(%s)+(%s)", e1.str, e2.str)
 	val := e1.val + e2.val
 	con := e1.con + e2.con
-	return *NewExp(str, val, con), nil
+	return NewExp(str, val, con), nil
 }
 
 // Multiply two expressions and return result.
-func Mult(e1, e2 Exp) (Exp, error) {
+func Mult(e1, e2 *Exp) (*Exp, error) {
 	if e1.val == 1 || e2.val == 1 {
-		return *new(Exp), errors.New("Unnecessary multiplication.")
+		return new(Exp), errors.New("Unnecessary multiplication.")
 	}
 	str := fmt.Sprintf("%s*%s", e1.str, e2.str)
 	val := e1.val * e2.val
 	con := e1.con + e2.con
-	return *NewExp(str, val, con), nil
+	return NewExp(str, val, con), nil
 }
 
 // Subtract two expressions and return result.
-func Sub(e1, e2 Exp) (Exp, error) {
+func Sub(e1, e2 *Exp) (*Exp, error) {
 	if e1.val <= e2.val {
-		return *new(Exp), errors.New("Unnecessary subtraction.")
+		return new(Exp), errors.New("Unnecessary subtraction.")
 	}
 	str := fmt.Sprintf("(%s)-(%s)", e1.str, e2.str)
 	val := e1.val - e2.val
 	con := e1.con + e2.con
-	return *NewExp(str, val, con), nil
+	return NewExp(str, val, con), nil
 }
 
 // Divide two expressions and return result.
-func Div(e1, e2 Exp) (Exp, error) {
+func Div(e1, e2 *Exp) (*Exp, error) {
 	if e2.val == 1 || e1.val%e2.val != 0 {
-		return *new(Exp), errors.New("Unnecessary or invalid division.")
+		return new(Exp), errors.New("Unnecessary or invalid division.")
 	}
 	str := fmt.Sprintf("%s/(%s)", e1.str, e2.str)
 	val := e1.val / e2.val
 	con := e1.con + e2.con
-	return *NewExp(str, val, con), nil
+	return NewExp(str, val, con), nil
 }
 
 // Return the useful combinations of two expressions.
-func UsefulCombs(e1, e2 Exp) []Exp {
-	methods := []func(Exp, Exp) (Exp, error){Add, Mult, Sub, Div}
-	var output []Exp
+func UsefulCombs(e1, e2 *Exp) []*Exp {
+	methods := []func(*Exp, *Exp) (*Exp, error){Add, Mult, Sub, Div}
+	var output []*Exp
 	for _, method := range methods {
 		comb, err := method(e1, e2)
 		if err == nil {
@@ -78,8 +78,8 @@ func UsefulCombs(e1, e2 Exp) []Exp {
 }
 
 // Return permutations of expressions in v2 and v2.
-func Perms(v1, v2 []Exp, id_set map[int]bool, n_vars int) []Exp {
-	var output []Exp
+func Perms(v1, v2 []*Exp, id_set map[int]bool, n_vars int) []*Exp {
+	var output []*Exp
 	for _, e1 := range v1 {
 		for _, e2 := range v2 {
 			if e1.con&e2.con != 0 {
@@ -100,7 +100,7 @@ func Perms(v1, v2 []Exp, id_set map[int]bool, n_vars int) []Exp {
 }
 
 // Generate id of expression
-func CreateID(e Exp, n_vars int) int {
+func CreateID(e *Exp, n_vars int) int {
 	return (e.val << n_vars) + e.con
 }
 
@@ -118,7 +118,7 @@ func STIs(s string) ([]int, error) {
 }
 
 // Return distance between an expression and the target.
-func Dist(e Exp, target int) int {
+func Dist(e *Exp, target int) int {
 	diff := e.val - target
 	if diff >= 0 {
 		return diff
@@ -130,11 +130,11 @@ func Dist(e Exp, target int) int {
 func RunNumbers(nums []int, target int) string {
 	// Generate base expressions
 	n_vars := len(nums)
-	exp_sets := make([][]Exp, n_vars)
+	exp_sets := make([][]*Exp, n_vars)
 	for i, num := range nums {
 		exp_sets[0] = append(
 			exp_sets[0],
-			*NewExp(fmt.Sprint(num), num, (1 << i)),
+			NewExp(fmt.Sprint(num), num, (1<<i)),
 		)
 	}
 	id_set := make(map[int]bool)
@@ -158,7 +158,7 @@ func RunNumbers(nums []int, target int) string {
 	}
 
 	// Print the best expression
-	var exps []Exp
+	var exps []*Exp
 	for _, v := range exp_sets {
 		exps = append(exps, v...)
 	}
