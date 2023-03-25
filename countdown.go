@@ -25,7 +25,7 @@ func NewExp(str string, val int, con int) *Exp {
 
 // Add two expressions and return result.
 func Add(e1, e2 *Exp) (*Exp, error) {
-	str := fmt.Sprintf("(%s)+(%s)", e1.str, e2.str)
+	str := fmt.Sprintf("(%s+%s)", e1.str, e2.str)
 	val := e1.val + e2.val
 	con := e1.con + e2.con
 	return NewExp(str, val, con), nil
@@ -36,7 +36,7 @@ func Mult(e1, e2 *Exp) (*Exp, error) {
 	if e1.val == 1 || e2.val == 1 {
 		return new(Exp), errors.New("Unnecessary multiplication.")
 	}
-	str := fmt.Sprintf("(%s)*(%s)", e1.str, e2.str)
+	str := fmt.Sprintf("%s*%s", e1.str, e2.str)
 	val := e1.val * e2.val
 	con := e1.con + e2.con
 	return NewExp(str, val, con), nil
@@ -58,7 +58,7 @@ func Div(e1, e2 *Exp) (*Exp, error) {
 	if e2.val == 1 || e1.val%e2.val != 0 {
 		return new(Exp), errors.New("Unnecessary or invalid division.")
 	}
-	str := fmt.Sprintf("(%s)/(%s)", e1.str, e2.str)
+	str := fmt.Sprintf("%s/(%s)", e1.str, e2.str)
 	val := e1.val / e2.val
 	con := e1.con + e2.con
 	return NewExp(str, val, con), nil
