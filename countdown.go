@@ -47,7 +47,7 @@ func Sub(e1, e2 *Exp) (*Exp, error) {
 	if e1.val <= e2.val {
 		return new(Exp), errors.New("Unnecessary subtraction.")
 	}
-	str := fmt.Sprintf("(%s)-(%s)", e1.str, e2.str)
+	str := fmt.Sprintf("(%s-%s)", e1.str, e2.str)
 	val := e1.val - e2.val
 	con := e1.con + e2.con
 	return NewExp(str, val, con), nil
