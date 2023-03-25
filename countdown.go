@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -116,6 +117,58 @@ func STIs(s string) ([]int, error) {
 	return nums, nil
 }
 
+// Return distance between an expression and the target.
+func Dist(e Exp, target int) int {
+	diff := e.val - target
+	if diff >= 0 {
+		return diff
+	}
+	return -diff
+}
+
+// Generate string of the best expression given numbers and target.
+func RunNumbers(nums []int, target int) string {
+	// Generate base expressions
+	n_vars := len(nums)
+	exp_sets := make([][]Exp, n_vars)
+	for i, num := range nums {
+		exp_sets[0] = append(
+			exp_sets[0],
+			*NewExp(fmt.Sprint(num), num, (1 << i)),
+		)
+	}
+	id_set := make(map[int]bool)
+	for _, e := range exp_sets[0] {
+		e_id := CreateID(e, n_vars)
+		id_set[e_id] = true
+	}
+
+	// Find all useful combinations
+	for i := 0; i < n_vars; i++ {
+		for j := 0; j < i; j++ {
+			exp_sets[i] = append(
+				exp_sets[i],
+				Perms(
+					exp_sets[j],
+					exp_sets[i-j-1],
+					id_set,
+					n_vars,
+				)...)
+		}
+	}
+
+	// Print the best expression
+	var exps []Exp
+	for _, v := range exp_sets {
+		exps = append(exps, v...)
+	}
+	sort.SliceStable(exps, func(i, j int) bool {
+		return Dist(exps[i], target) < Dist(exps[j], target)
+	})
+	best := exps[0]
+	return fmt.Sprintf("%v = %v", best.str, best.val)
+}
+
 func main() {
 	// Take input
 	fmt.Print("Enter numbers: ")
@@ -140,10 +193,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	ans := RunNumbers(nums, target)
+	fmt.Print(ans)
 
-	fmt.Println(nums)
-	fmt.Println(target)
-	// Generate base expressions
-	// Find all useful combinations
-	// Print the best expression
 }
