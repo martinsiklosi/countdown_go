@@ -153,7 +153,8 @@ func RunNumbers(nums []int, target int) string {
 					exp_sets[i-j-1],
 					id_set,
 					n_vars,
-				)...)
+				)...,
+			)
 		}
 	}
 
